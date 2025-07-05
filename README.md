@@ -6,6 +6,7 @@ AI-powered productivity app with Django backend and Next.js + Tailwind CSS front
 
 ## 🚀 Project Overview
 - **Backend:** Django REST API with AI-powered task management, context processing, and analytics.
+- Connect AI engine to a real LLM.
 - **Frontend:** Next.js (App Router) with Tailwind CSS for a modern, responsive UI.
 - **Features:**
   - Smart task creation, editing, and AI suggestions
@@ -13,6 +14,7 @@ AI-powered productivity app with Django backend and Next.js + Tailwind CSS front
   - Analytics dashboard
   - Category management
   - Bulk actions, dark mode, onboarding, and more
+  - Use feedback/corrections to improve AI suggestions
 
 ---
 
