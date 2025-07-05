@@ -155,7 +155,7 @@ export default function ContextModal({ isOpen, onClose, onSuccess, context }: Co
                   context.processing_status === 'partially_processed' && "bg-yellow-100 text-yellow-800",
                   context.processing_status === 'pending' && "bg-gray-100 text-gray-800"
                 )}>
-                  {(context.processing_status ?? '').replace('_', ' ').toUpperCase()}
+                                          {((context.processing_status ?? '').replace('_', ' ')).toUpperCase()}
                 </span>
                 {context.processed_at && (
                   <span className="text-xs text-gray-500">

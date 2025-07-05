@@ -50,7 +50,8 @@ export default function ContextPage() {
   };
 
   const filteredEntries = contextEntries.filter(entry => {
-    const matchesSearch = entry.content.toLowerCase().includes(searchTerm.toLowerCase());
+    const searchTermLower = (searchTerm || '').toLowerCase();
+    const matchesSearch = (entry.content?.toLowerCase() || '').includes(searchTermLower);
     const matchesSource = sourceFilter === 'all' || entry.source_type === sourceFilter;
     const matchesStatus = statusFilter === 'all' || entry.processing_status === statusFilter;
     return matchesSearch && matchesSource && matchesStatus;
@@ -259,7 +260,7 @@ export default function ContextPage() {
                           entry.processing_status === 'partially_processed' && "bg-yellow-100 text-yellow-800 border-yellow-200",
                           entry.processing_status === 'pending' && "bg-gray-100 text-gray-800 border-gray-200"
                         )}>
-                          {(entry.processing_status ?? '').replace('_', ' ').toUpperCase()}
+                          {((entry.processing_status ?? '').replace('_', ' ')).toUpperCase()}
                         </span>
                         {entry.sentiment_score !== null && (
                           <span className={cn(

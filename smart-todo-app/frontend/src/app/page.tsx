@@ -126,8 +126,9 @@ export default function Dashboard() {
   }, [loadData]);
 
   const filteredTasks = tasks.filter(task => {
-    const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         task.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const searchTermLower = (searchTerm || '').toLowerCase();
+    const matchesSearch = (task.title?.toLowerCase() || '').includes(searchTermLower) ||
+                         (task.description?.toLowerCase() || '').includes(searchTermLower);
     const matchesStatus = statusFilter === 'all' || task.status === statusFilter;
     const matchesPriority = priorityFilter === null || task.priority === priorityFilter;
     const matchesCategory = categoryFilter === null || task.category === categoryFilter;
@@ -266,7 +267,7 @@ export default function Dashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-6">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Smart Todo</h1>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Smart Todo Pradeep</h1>
               <p className="text-gray-600 dark:text-gray-300">AI-Powered Task Management</p>
             </div>
             <button 
@@ -421,21 +422,21 @@ export default function Dashboard() {
                   />
                   <div className="flex-1 cursor-pointer" onClick={() => handleEditTask(task)}>
                     <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-lg font-medium text-gray-900 dark:text-white">{task.title}</h3>
+                      <h3 className="text-lg font-medium text-gray-900 dark:text-white">{task.title || 'Untitled Task'}</h3>
                       <span className={cn(
                         "px-2 py-1 text-xs font-medium rounded-full border",
-                        getPriorityColor(task.priority)
+                        getPriorityColor(task.priority || 1)
                       )}>
-                        {getPriorityIcon(task.priority)} {task.priority_label}
+                        {getPriorityIcon(task.priority || 1)} {task.priority_label || 'Priority'}
                       </span>
                       <span className={cn(
                         "px-2 py-1 text-xs font-medium rounded-full border",
-                        getStatusColor(task.status)
+                        getStatusColor(task.status || 'pending')
                       )}>
-                        {getStatusIcon(task.status)} {task.status_label}
+                        {getStatusIcon(task.status || 'pending')} {task.status_label || 'Pending'}
                       </span>
                     </div>
-                    <p className="text-gray-600 dark:text-gray-300 mb-2">{task.description}</p>
+                    <p className="text-gray-600 dark:text-gray-300 mb-2">{task.description || 'No description'}</p>
                     {/* Context tags */}
                     {task.context_tags && (
                       <div className="mt-1 flex flex-wrap gap-1">
@@ -445,7 +446,7 @@ export default function Dashboard() {
                       </div>
                     )}
                     <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-                      <span>Category: {task.category_name}</span>
+                      <span>Category: {task.category_name || 'Uncategorized'}</span>
                       {task.deadline && (
                         <span>Due: {formatDate(task.deadline)}</span>
                       )}
@@ -523,7 +524,7 @@ export default function Dashboard() {
           <div className="bg-white dark:bg-gray-900 rounded-lg shadow-xl max-w-sm w-full mx-4">
             <div className="p-6">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Delete Task</h3>
-              <p className="text-gray-700 dark:text-gray-200 mb-4">Are you sure you want to delete <span className="font-bold">{deleteConfirm.task.title}</span>?</p>
+              <p className="text-gray-700 dark:text-gray-200 mb-4">Are you sure you want to delete <span className="font-bold">{deleteConfirm.task.title || 'this task'}</span>?</p>
               <div className="flex gap-3">
                 <button
                   onClick={() => setDeleteConfirm({ open: false, task: null })}

@@ -3,6 +3,8 @@ import axios from 'axios';
 // API Configuration
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
 
+console.log('API_BASE_URL:', API_BASE_URL);
+
 export const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -11,6 +13,8 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use(request => {
+  console.log('API Request URL:', request.url);
+  console.log('API Request Full URL:', (request.baseURL || '') + (request.url || ''));
   console.log('API Request:', request);
   return request;
 });
@@ -112,72 +116,72 @@ export const taskApi = {
     search?: string;
     ordering?: string;
   }) => {
-    const response = await api.get<Task[]>('/tasks/', { params });
+    const response = await api.get<Task[]>('/api/tasks/', { params });
     return response.data;
   },
 
   // Get single task
   getTask: async (id: number) => {
-    const response = await api.get<Task>(`/tasks/${id}/`);
+    const response = await api.get<Task>(`/api/tasks/${id}/`);
     return response.data;
   },
 
   // Create new task
   createTask: async (data: Partial<Task>) => {
-    const response = await api.post<Task>('/tasks/', data);
+    const response = await api.post<Task>('/api/tasks/', data);
     return response.data;
   },
 
   // Update task
   updateTask: async (id: number, data: Partial<Task>) => {
-    const response = await api.put<Task>(`/tasks/${id}/`, data);
+    const response = await api.put<Task>(`/api/tasks/${id}/`, data);
     return response.data;
   },
 
   // Delete task
   deleteTask: async (id: number) => {
-    await api.delete(`/tasks/${id}/`);
+    await api.delete(`/api/tasks/${id}/`);
   },
 
   // Mark task as completed
   markCompleted: async (id: number) => {
-    const response = await api.post<Task>(`/tasks/${id}/mark_completed/`);
+    const response = await api.post<Task>(`/api/tasks/${id}/mark_completed/`);
     return response.data;
   },
 
   // Enhance task with AI
   enhanceWithAI: async (id: number) => {
-    const response = await api.post<Task>(`/tasks/${id}/enhance_with_ai/`);
+    const response = await api.post<Task>(`/api/tasks/${id}/enhance_with_ai/`);
     return response.data;
   },
 
   // Get task statistics
   getStatistics: async () => {
-    const response = await api.get<TaskStatistics>('/tasks/statistics/');
+    const response = await api.get<TaskStatistics>('/api/tasks/statistics/');
     return response.data;
   },
 
   // Get overdue tasks
   getOverdueTasks: async () => {
-    const response = await api.get<Task[]>('/tasks/overdue/');
+    const response = await api.get<Task[]>('/api/tasks/overdue/');
     return response.data;
   },
 
   // Get high priority tasks
   getHighPriorityTasks: async () => {
-    const response = await api.get<Task[]>('/tasks/high_priority/');
+    const response = await api.get<Task[]>('/api/tasks/high_priority/');
     return response.data;
   },
 
   // Get today's tasks
   getTodayTasks: async () => {
-    const response = await api.get<Task[]>('/tasks/today/');
+    const response = await api.get<Task[]>('/api/tasks/today/');
     return response.data;
   },
 
   // Bulk update task status
   bulkUpdateStatus: async (taskIds: number[], status: string) => {
-    const response = await api.post('/tasks/bulk_update_status/', {
+    const response = await api.post('/api/tasks/bulk_update_status/', {
       task_ids: taskIds,
       status,
     });
@@ -188,7 +192,7 @@ export const taskApi = {
 export const categoryApi = {
   // Get all categories
   getCategories: async () => {
-    const response = await api.get('/categories/');
+    const response = await api.get('/api/categories/');
     return response.data;
   },
 
@@ -235,78 +239,78 @@ export const contextApi = {
     search?: string;
     ordering?: string;
   }) => {
-    const response = await api.get<ContextEntry[]>('/context/', { params });
+    const response = await api.get<ContextEntry[]>('/api/context/', { params });
     return response.data;
   },
 
   // Get single context entry
   getContextEntry: async (id: number) => {
-    const response = await api.get<ContextEntry>(`/context/${id}/`);
+    const response = await api.get<ContextEntry>(`/api/context/${id}/`);
     return response.data;
   },
 
   // Create new context entry
   createContextEntry: async (data: Partial<ContextEntry>) => {
-    const response = await api.post<ContextEntry>('/context/', data);
+    const response = await api.post<ContextEntry>('/api/context/', data);
     return response.data;
   },
 
   // Update context entry
   updateContextEntry: async (id: number, data: Partial<ContextEntry>) => {
-    const response = await api.put<ContextEntry>(`/context/${id}/`, data);
+    const response = await api.put<ContextEntry>(`/api/context/${id}/`, data);
     return response.data;
   },
 
   // Delete context entry
   deleteContextEntry: async (id: number) => {
-    await api.delete(`/context/${id}/`);
+    await api.delete(`/api/context/${id}/`);
   },
 
   // Get unprocessed entries
   getUnprocessedEntries: async () => {
-    const response = await api.get<ContextEntry[]>('/context/unprocessed/');
+    const response = await api.get<ContextEntry[]>('/api/context/unprocessed/');
     return response.data;
   },
 
   // Get high importance entries
   getHighImportanceEntries: async () => {
-    const response = await api.get<ContextEntry[]>('/context/high_importance/');
+    const response = await api.get<ContextEntry[]>('/api/context/high_importance/');
     return response.data;
   },
 
   // Get entries by source
   getEntriesBySource: async (sourceType: string) => {
-    const response = await api.get<ContextEntry[]>(`/context/by_source/?source_type=${sourceType}`);
+    const response = await api.get<ContextEntry[]>(`/api/context/by_source/?source_type=${sourceType}`);
     return response.data;
   },
 
   // Reprocess context entry
   reprocessEntry: async (id: number) => {
-    const response = await api.post<ContextEntry>(`/context/${id}/reprocess/`);
+    const response = await api.post<ContextEntry>(`/api/context/${id}/reprocess/`);
     return response.data;
   },
 
   // Bulk process entries
   bulkProcess: async () => {
-    const response = await api.post('/context/bulk_process/');
+    const response = await api.post('/api/context/bulk_process/');
     return response.data;
   },
 
   // Get context statistics
   getStatistics: async () => {
-    const response = await api.get<ContextStatistics>('/context/statistics/');
+    const response = await api.get<ContextStatistics>('/api/context/statistics/');
     return response.data;
   },
 
   // Get context insights
   getInsights: async () => {
-    const response = await api.get('/context/insights/');
+    const response = await api.get('/api/context/insights/');
     return response.data;
   },
 
   // Process context entry with AI
   processWithAI: async (id: number) => {
-    const response = await api.post<ContextEntry>(`/context/${id}/process/`);
+    const response = await api.post<ContextEntry>(`/api/context/${id}/process/`);
     return response.data;
   },
 }; 

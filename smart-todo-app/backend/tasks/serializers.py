@@ -13,6 +13,42 @@ class CategorySerializer(serializers.ModelSerializer):
     
     def get_task_count(self, obj):
         return obj.task_set.count()
+    
+    def validate_color(self, value):
+        """Convert color names to hex colors if needed"""
+        color_map = {
+            'red': '#ef4444',
+            'orange': '#f97316',
+            'yellow': '#eab308',
+            'green': '#22c55e',
+            'blue': '#3b82f6',
+            'purple': '#a855f7',
+            'pink': '#ec4899',
+            'gray': '#6b7280',
+            'indigo': '#6366f1',
+            'teal': '#14b8a6',
+            'cyan': '#06b6d4',
+            'lime': '#84cc16',
+        }
+        
+        # If it's already a hex color, return as is
+        if value.startswith('#'):
+            return value
+        
+        # If it's a color name, convert to hex
+        if value in color_map:
+            return color_map[value]
+        
+        # If it's not recognized, default to blue
+        return '#3b82f6'
+    
+    def validate_name(self, value):
+        """Ensure name is not empty and has reasonable length"""
+        if not value or not value.strip():
+            raise serializers.ValidationError("Category name is required.")
+        if len(value.strip()) > 100:
+            raise serializers.ValidationError("Category name must be 100 characters or less.")
+        return value.strip()
 
 class TaskSerializer(serializers.ModelSerializer):
     category_name = serializers.CharField(source='category.name', read_only=True)

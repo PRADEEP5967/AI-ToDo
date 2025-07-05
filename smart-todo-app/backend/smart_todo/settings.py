@@ -153,12 +153,7 @@ REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'smart_todo.rest_exception_handler.custom_exception_handler',
 }
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-    "http://localhost:3001",
-    "http://127.0.0.1:3001",
-]
+CORS_ALLOW_ALL_ORIGINS = True
 
 # AI Configuration
 OPENAI_API_KEY = config('OPENAI_API_KEY', default='')

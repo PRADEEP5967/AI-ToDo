@@ -8,6 +8,20 @@ import { z } from 'zod';
 import { categoryApi, Category } from '@/lib/api';
 import { cn } from '@/lib/utils';
 
+// Type for API error response
+interface ApiErrorResponse {
+  response?: {
+    data?: string | {
+      name?: string[];
+      color?: string[];
+      non_field_errors?: string[];
+      [key: string]: unknown;
+    };
+    status?: number;
+    statusText?: string;
+  };
+}
+
 const categorySchema = z.object({
   name: z.string().min(1, 'Name is required'),
   color: z.string().min(1, 'Color is required'),
@@ -62,6 +76,8 @@ export default function CategoryModal({ isOpen, onClose, onSuccess, category }: 
       setLoading(true);
       setError('');
 
+      console.log('Submitting category data:', data);
+
       if (category) {
         await categoryApi.updateCategory(category.id, data);
       } else {
@@ -72,7 +88,32 @@ export default function CategoryModal({ isOpen, onClose, onSuccess, category }: 
       onClose();
       reset();
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      console.error('Category submission error:', err);
+      
+      let errorMessage = 'An error occurred while saving the category.';
+      
+      if (err && typeof err === 'object' && 'response' in err) {
+        const response = (err as ApiErrorResponse).response;
+        if (response && response.data) {
+          if (typeof response.data === 'string') {
+            errorMessage = response.data;
+          } else if (response.data.name) {
+            errorMessage = `Name error: ${response.data.name.join(', ')}`;
+          } else if (response.data.color) {
+            errorMessage = `Color error: ${response.data.color.join(', ')}`;
+          } else if (response.data.non_field_errors) {
+            errorMessage = response.data.non_field_errors.join(', ');
+          } else {
+            errorMessage = JSON.stringify(response.data);
+          }
+        } else if (response && response.status) {
+          errorMessage = `Server error (${response.status}): ${response.statusText}`;
+        }
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

@@ -86,6 +86,7 @@ export default function CategoriesPage() {
             <Plus className="w-4 h-4" /> New Category
           </button>
         </div>
+        
         {error && <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-2 rounded-lg">{error}</div>}
         <div className="bg-white rounded-lg shadow divide-y">
           {loading ? (
@@ -96,7 +97,14 @@ export default function CategoriesPage() {
             categories.map(cat => (
               <div key={cat.id} className="flex items-center justify-between p-4">
                 <div className="flex items-center gap-3">
-                  <div className={`w-4 h-4 rounded-full bg-${cat.color}-500 border`} />
+                  <div 
+                    className="w-4 h-4 rounded-full border"
+                    style={{ backgroundColor: cat.color.startsWith('#') ? cat.color : undefined }}
+                  >
+                    {!cat.color.startsWith('#') && (
+                      <div className={`w-full h-full rounded-full bg-${cat.color}-500`} />
+                    )}
+                  </div>
                   <span className="font-medium text-gray-800">{cat.name}</span>
                   <span className="text-xs text-gray-500">{cat.task_count} tasks</span>
                 </div>
